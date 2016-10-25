@@ -87,7 +87,16 @@ class ExtensibleSearchService {
 				'ExtensibleSearchPageID' => $pageID
 			));
 		}
-		$suggestion->write();
+        
+        try {
+            $suggestion->write();
+        } catch (ValidationException $ex) {
+            // we're not too fussed if this doesn't save, and we don't need to 
+            // do anything if it doesn't. 
+            \SS_Log::log($ex, \SS_Log::WARN);
+            return null;
+        }
+
 		return $suggestion;
 	}
 
